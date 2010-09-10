@@ -15,8 +15,9 @@
 #EMAILS="me@hotmail.com you@gmail.com we@yahoo.com"
 source config.sh
 
-# This is the minimum allowed backup filesize. If a DB is smaller, send an alert email!
-FILESIZE=1024
+# This is the minimum allowed backup filesize in bytes.
+# If a DB is smaller, send an alert email!
+FILESIZE=8192
 
 ENDEMAILTEXT="Summary of Backups on $HOST\n\n"
 
@@ -32,12 +33,12 @@ for dbName in $DBLIST; do
 	mysqldump -u"$DBUSER" -p"$DBPASS" --opt \
 		"$DBPREFIX$(echo $dbName)" > $TODAY
 
-	if [ `du $TODAY | cut -f1` -lt $FILESIZE ]
+	if [ `du -b $TODAY | cut -f1` -lt $FILESIZE ]
 	then
-		echo Big problem while running backup on $dbName. File too small.
+		echo Big problem while running backup on $dbName. File too small. It is only `du -h $TODAY | cut -f1`
 		echo "While backing up $dbName on $HOST, $TODAY did not yield a valid filesize. You may wish to check it." | \
 		    mail -s "Errors while backing up $HOST" $EMAILS
-			ENDEMAILTEXT=$ENDEMAILTEXT"didn't make .sql file\t"
+			ENDEMAILTEXT=$ENDEMAILTEXT"didn't make .sql file properly\t"
 	else
 		echo Wrote $dbName to $TODAY OK.
 		ENDEMAILTEXT=$ENDEMAILTEXT"written to $TODAY\tfilesize: `du -h $TODAY | cut -f1`\t"
@@ -59,5 +60,5 @@ for dbName in $DBLIST; do
 	ENDEMAILTEXT=$ENDEMAILTEXT"\n"
 done
 
-echo "Backup on $HOST ran $(date +'%a %m/%d/%y')\n$ENDEMAILTEXT" | mail -s "Backup of $HOST for $(date +%Y-%m-%d)" $EMAILS 
-
+echo "Backup on $HOST ran $(date +'%a %m/%d/%y')\n$ENDEMAILTEXT" | \
+	mail -s "Backup of $HOST for $(date +%Y-%m-%d)" $EMAILS 
