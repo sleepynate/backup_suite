@@ -1,0 +1,29 @@
+####### Name of host
+# This only identifies the machine you're backing up. It has no actual effect
+# and does not need to be the actual hostname
+HOST=teapot
+
+####### Backup path
+# Path to back up to. This is where your .sql files will be stored, as well
+# as the resulting .gz files.
+BACKUPDIR=/backup/dbs/$HOST
+
+####### Databases
+# List of databases, space-separated, to back up. They are archived
+# in sequence
+DBLIST="db1 db2 db3"
+
+# If you use a prefix for your databases, you can define it here.
+# it is pre-pended to the above members of $DBLIST
+# so, this example would address teapot_db1, teapot_db2, and teapot_db3
+# if you don't need this, comment out the line.
+DBPREFIX="teapot_"
+
+####### Credentials
+DBUSER="user"
+DBPASS="pass"
+
+####### Notification
+# This is a list of emails, space separated, to whom we should send an email
+# with any errors as well as a summary.
+EMAILS="me@gmail.com you@yahoo.com manager@hotmail.com"
