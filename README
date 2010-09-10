@@ -1,0 +1,4 @@
+A sample MYSQL backup script. I set this as a daily cron on my machines to take a backup in the middle of the night.
+
+not included is the required "config.sh", though the variables are commented in the header.
+
