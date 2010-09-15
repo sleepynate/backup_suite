@@ -19,7 +19,7 @@ source config.sh
 # If a DB is smaller, send an alert email!
 FILESIZE=8192
 
-ENDEMAILTEXT="Summary of Backups on $HOST\n\n"
+ENDEMAILTEXT==` echo -e "Summary of Backups on $HOST\n\n"`
 
 mkdir -p $BACKUPDIR
 
@@ -28,7 +28,7 @@ for dbName in $DBLIST; do
 	TODAY=$BACKUPDIR/$DBPREFIX$( echo $dbName )_$(date +%Y-%m-%d).sql
 
 	echo Dumping database $dbName to $TODAY
-	ENDEMAILTEXT=$ENDEMAILTEXT"$dbName\t"
+	ENDEMAILTEXT=$ENDEMAILTEXT"$dbName	"
 
 	mysqldump -u"$DBUSER" -p"$DBPASS" --opt \
 		"$DBPREFIX$(echo $dbName)" > $TODAY
@@ -38,10 +38,10 @@ for dbName in $DBLIST; do
 		echo Big problem while running backup on $dbName. File too small. It is only `du -h $TODAY | cut -f1`
 		echo "While backing up $dbName on $HOST, $TODAY did not yield a valid filesize. You may wish to check it." | \
 		    mail -s "Errors while backing up $HOST" $EMAILS
-			ENDEMAILTEXT=$ENDEMAILTEXT"didn't make .sql file properly\t"
+			ENDEMAILTEXT=$ENDEMAILTEXT"didn't make .sql file properly	"
 	else
 		echo Wrote $dbName to $TODAY OK.
-		ENDEMAILTEXT=$ENDEMAILTEXT"written to $TODAY\tfilesize: `du -h $TODAY | cut -f1`\t"
+		ENDEMAILTEXT=$ENDEMAILTEXT"written to $TODAY	filesize: `du -h $TODAY | cut -f1`	"
 	fi
 
 	cd /$BACKUPDIR/
@@ -49,7 +49,7 @@ for dbName in $DBLIST; do
 	if [ -e $TODAY.gz ]
 	then
 		echo Archive of $dbName successful.
-		ENDEMAILTEXT=$ENDEMAILTEXT"zipped to size filesize: `du -h $TODAY.gz | cut -f1`\t"
+		ENDEMAILTEXT=$ENDEMAILTEXT"zipped to size filesize: `du -h $TODAY.gz | cut -f1`	"
 	else
 		echo Big problem while running backup on $dbName. No gzip file.
 		echo "While backing up $dbName on $HOST, couldn't create a valid gzip. You may wish to check it." | \
@@ -57,8 +57,9 @@ for dbName in $DBLIST; do
 		ENDEMAILTEXT=$ENDEMAILTEXT"Couldn't create gzip file"
 	fi
 
-	ENDEMAILTEXT=$ENDEMAILTEXT"\n"
+	ENDEMAILTEXT=$ENDEMAILTEXT`echo "\n"`
 done
 
-echo "Backup on $HOST ran $(date +'%a %m/%d/%y')\n$ENDEMAILTEXT" | \
+echo "Backup on $HOST ran $(date +'%a %m/%d/%y')
+$ENDEMAILTEXT" | \
 	mail -s "Backup of $HOST for $(date +%Y-%m-%d)" $EMAILS 
