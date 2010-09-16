@@ -1,25 +1,15 @@
 #!/bin/bash
-#name of host
-#HOST=vlad
-# Path to back up to.
-#BACKUPDIR=/tmp
-# list of databases, space-separated, to back up
-#DBLIST="db1 db2 db3"
-# DB User
-#DBUSER="my_user"
-# DB password
-#DBUSER="mypass"
-# prefix to all DBLIST names
-#DBPREFIX="mydb_"
-# Who should we notify ?
-#EMAILS="me@hotmail.com you@gmail.com we@yahoo.com"
-source config.sh
+
+####### Config path
+# Path to load the config file from
+CONFIGDIR=$(cd $(dirname $0); pwd -P)/ 
+source $CONFIGDIR/config.sh
 
 # This is the minimum allowed backup filesize in bytes.
 # If a DB is smaller, send an alert email!
 FILESIZE=8192
 
-ENDEMAILTEXT==` echo -e "Summary of Backups on $HOST\n\n"`
+ENDEMAILTEXT="Summary of Backups on $HOST"
 
 mkdir -p $BACKUPDIR
 
@@ -57,7 +47,7 @@ for dbName in $DBLIST; do
 		ENDEMAILTEXT=$ENDEMAILTEXT"Couldn't create gzip file"
 	fi
 
-	ENDEMAILTEXT=$ENDEMAILTEXT`echo "\n"`
+	ENDEMAILTEXT=$ENDEMAILTEXT""
 done
 
 echo "Backup on $HOST ran $(date +'%a %m/%d/%y')

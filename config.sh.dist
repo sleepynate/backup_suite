@@ -8,10 +8,6 @@ HOST=teapot
 # as the resulting .gz files.
 BACKUPDIR=/backup/dbs/$HOST
 
-####### Config path
-# Path to load the config file from
-CONFIGDIR=/root/backup_suite
-
 ####### Databases
 # List of databases, space-separated, to back up. They are archived
 # in sequence
