@@ -50,6 +50,16 @@ for dbName in $DBLIST; do
 	ENDEMAILTEXT=$ENDEMAILTEXT""
 done
 
+if [ -n $SCPLOCATION ] ; then
+	scplist=' '
+	for dbName in $DBLIST; do
+		scplist=$scplist' '$BACKUPDIR/$DBPREFIX$( echo $dbName )_$(date +%Y-%m-%d).sql.gz
+	done
+	echo scp $scplist $SCPLOADTION
+	scp $scplist $SCPLOCATION
+	ENDEMAILTEXT="$ENDEMAILTEXT$scplist copied to $SCPLOCATION"
+fi
+
 echo "Backup on $HOST ran $(date +'%a %m/%d/%y')
 $ENDEMAILTEXT" | \
 	mail -s "Backup of $HOST for $(date +%Y-%m-%d)" $EMAILS 

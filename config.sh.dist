@@ -27,3 +27,7 @@ DBPASS="pass"
 # This is a list of emails, space separated, to whom we should send an email
 # with any errors as well as a summary.
 EMAILS="me@gmail.com you@yahoo.com manager@hotmail.com"
+####### SCP destination
+# Where to scp the compelted backup to.
+# be sure to include the full user@host:~/location
+SCPLOCATION="derpuser@hurrbox:/tmp/remote"
